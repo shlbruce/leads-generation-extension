@@ -1,11 +1,11 @@
 // apis.js
-async function fetchSmartReply(serverUrl, apiKey, category, review) {
-    const url = `${serverUrl}/api/v1/chatbot/${category}/analyze_review`;
+async function fetchAnalyzeResult(serverUrl, apiKey, message) {
+    const url = `${serverUrl}/api/v1/lead/travel_cruise/analyze`;
     const response = await fetch(url, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: apiKey, review: review })
+        body: JSON.stringify({ key: apiKey, message: message })
     });
 
     if (!response.ok) throw new Error("Network error");

@@ -108,42 +108,6 @@ function addButtonsToAnalyze() {
 
   replyButtonList.forEach((reply) => {
     addAnalyzeButton(reply);
-    // ⛳ Click handler
-    // prosConsButtun.addEventListener('click', async () => {
-    //     const serverUrl = "http://localhost:3001"; 
-    //     const apiKey = "your-api-key"; 
-    //     const category = "restaurant"; 
-
-    //     const span = prosConsButtun.querySelector('span');
-    //     if (!span) return;
-
-    //     // Backup original text
-    //     const originalText = span.textContent;
-
-    //     // Set spinner
-    //     span.innerHTML = `<span style="
-    //       display: inline-block;
-    //       width: 14px;
-    //       height: 14px;
-    //       border: 2px solid white;
-    //       border-top: 2px solid red;
-    //       border-radius: 50%;
-    //       animation: spin 1s linear infinite;
-    //       vertical-align: middle;
-    //     "></span>`;
-
-    //     try {
-    //       const result = await fetchSmartReply(serverUrl, apiKey, category, reviewText);
-    //       const parsed = JSON.parse(result.answer);
-    //       showParsedResult(parsed);
-    //     } catch (err) {
-    //       console.error("❌ Error fetching pros/cons:", err);
-    //       alert("Failed to fetch pros/cons analysis.");
-    //     } finally {
-    //       // Restore text
-    //       span.textContent = originalText;
-    //     }
-    //   });
   });
 }
 

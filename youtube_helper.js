@@ -44,6 +44,41 @@ function addAnalyzeButton(reply) {
   span.style.fontFamily = '"Segoe UI", "Roboto", "Helvetica", sans-serif';
 
   analyzeDiv.appendChild(span);
+
+  //⛳ Click handler
+  analyzeDiv.addEventListener('click', async () => {
+    const serverUrl = "https://localhost:8443";
+    const apiKey = "your-api-key";
+
+    const span = analyzeDiv.querySelector('span');
+    // Backup original text
+    const originalText = span.textContent;
+    const message = "I’m not a cruise person, this video may have change my mind.You two showed how much fun you were having!😅"
+    // Set spinner
+    span.innerHTML = `<span style="
+          display: inline-block;
+          width: 14px;
+          height: 14px;
+          border: 2px solid white;
+          border-top: 2px solid red;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+          vertical-align: middle;
+        "></span>`;
+
+    try {
+      const result = await fetchAnalyzeResult(serverUrl, apiKey, message);
+      const parsed = JSON.parse(result.answer);
+      alert(parsed);
+      //showParsedResult(parsed);
+    } catch (err) {
+      console.error("❌ Error fetching pros/cons:", err);
+      alert("Failed to fetch analysis.");
+    } finally {
+      // Restore text
+      span.textContent = originalText;
+    }
+  });
   reply.parentNode.insertBefore(analyzeDiv, reply.nextSibling);
 }
 

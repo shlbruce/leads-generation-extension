@@ -6,6 +6,7 @@
   "permissions": ["scripting"],
   "host_permissions": [
     "https://www.youtube.com/*",
+    "https://localhost/*",
     "http://localhost/*"
   ],
   "content_scripts": [
