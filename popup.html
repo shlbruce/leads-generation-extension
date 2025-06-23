@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Gmail Smart Reply Settings</title>
+    <link rel="stylesheet" href="popup.css" />
+</head>
+
+<body>
+    <h3 style="margin-bottom: 16px;">Yelp review Pros/Cons Settings</h3>
+    <div class="container">
+
+        <label for="serverUrl">🌐 Talx2Me Server Address</label>
+        <input id="serverUrl" type="text" placeholder="https://talx2me.com" />
+
+        <label for="apiKey">🔑 Talx2Me API Key</label>
+        <input id="apiKey" type="password" placeholder="Enter your Talx2Me API key" />
+      
+        <label style="margin-top: 16px;">🏷️ Business Type</label>
+        <div class="radio-group">
+            <label><input type="radio" name="category" value="restaurant" checked /> Restaurant</label>
+            <label><input type="radio" name="category" value="tour" /> Tour</label>
+            <label><input type="radio" name="category" value="dentist" /> Dentist</label>
+            <label><input type="radio" name="category" value="business" /> Others</label>
+        </div>
+
+        <label for="replyDelay" style="margin-top: 16px;">⏱️ Smart Reply Delay (ms)</label>
+        <input id="replyDelay" type="number" placeholder="1000" />
+
+        <button id="save">💾 Save Settings</button>
+        <div class="note">Your key and settings are stored securely in your browser.</div>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+
+</html>
