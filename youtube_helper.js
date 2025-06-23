@@ -47,7 +47,7 @@ function addAnalyzeButton(reply) {
 
   //⛳ Click handler
   analyzeDiv.addEventListener('click', async () => {
-    const serverUrl = "https://localhost:8443";
+    const serverUrl = "http://localhost:3001";
     const apiKey = "your-api-key";
 
     const span = analyzeDiv.querySelector('span');
