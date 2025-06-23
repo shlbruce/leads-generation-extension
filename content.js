@@ -6,13 +6,29 @@ function showParsedResult(parsed) {
   popup.style.borderRadius = "8px";
   popup.style.maxWidth = "400px";
   popup.style.fontFamily = "sans-serif";
-  popup.style.fontSize = "18px"; // Increased font size
+  popup.style.fontSize = "18px";
   popup.style.position = "fixed";
   popup.style.top = "50%";
   popup.style.left = "50%";
   popup.style.transform = "translate(-50%, -50%)";
   popup.style.boxShadow = "0 4px 24px rgba(0,0,0,0.15)";
   popup.style.zIndex = "999999";
+
+  // Create close ("×") button
+  const closeBtn = document.createElement("span");
+  closeBtn.textContent = "×";
+  closeBtn.style.position = "absolute";
+  closeBtn.style.top = "12px";
+  closeBtn.style.right = "18px";
+  closeBtn.style.fontSize = "24px";
+  closeBtn.style.cursor = "pointer";
+  closeBtn.style.fontWeight = "bold";
+  closeBtn.style.color = "#888";
+  closeBtn.onmouseenter = () => closeBtn.style.color = "#f00";
+  closeBtn.onmouseleave = () => closeBtn.style.color = "#888";
+  closeBtn.onclick = () => popup.remove();
+
+  popup.appendChild(closeBtn);
 
   // Loop through each key-value in the parsed object
   for (const [key, value] of Object.entries(parsed)) {
@@ -24,7 +40,7 @@ function showParsedResult(parsed) {
 
     const title = document.createElement("strong");
     title.textContent = `${key}: `;
-    title.style.fontSize = "20px"; // Bold label a bit larger
+    title.style.fontSize = "20px";
 
     header.appendChild(title);
     header.appendChild(document.createTextNode(value));
