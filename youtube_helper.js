@@ -26,10 +26,13 @@ function addAnalyzeAllButton() {
   sortMenu.parentNode.insertBefore(analyzeAllDiv, sortMenu.nextSibling);
 }
 
-function addAnalyzeButton(reply) {
+function addAnalyzeButton(commentSection) {
+
+  const reply = commentSection.querySelector('ytd-button-renderer[id="reply-button-end"]');
+
   const analyzeDiv = document.createElement("div");
   // change the id to avoid repeatedly adding the button
-  reply.id = "reply-button-end-1";
+  commentSection.id = "comment-1";
   analyzeDiv.id = "analyze-button";
   // Apply styling
   analyzeDiv.style.border = '2px solid white';      // White border

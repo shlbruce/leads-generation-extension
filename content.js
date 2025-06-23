@@ -13,10 +13,11 @@ function addButtonsToAnalyze() {
   if (!commentsSection) {
     return;
   }
-  const replyButtonList = commentsSection.querySelectorAll('ytd-button-renderer[id="reply-button-end"]');
+  
+  const commentSectionList = commentsSection.querySelectorAll('ytd-comment-view-model[id="comment"]');
 
-  replyButtonList.forEach((reply) => {
-    addAnalyzeButton(reply);
+  commentSectionList.forEach((commentSection) => {
+    addAnalyzeButton(commentSection);
   });
 }
 
