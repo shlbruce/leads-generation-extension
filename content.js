@@ -93,17 +93,16 @@ function showParsedResult(parsed) {
 
 function addButtonsToAnalyze() {
 
-  if (document.getElementById('analyze-all-button'))
-    return;
+  if (!document.getElementById('analyze-all-button')) {
+    addAnalyzeAllButton();
+  }
+
+
 
   const commentsSection = document.getElementById('comments');
-
   if (!commentsSection) {
     return;
   }
-
-  addAnalyzeAllButton();
-
   const replyButtonList = commentsSection.querySelectorAll('ytd-button-renderer[id="reply-button-end"]');
 
   replyButtonList.forEach((reply) => {

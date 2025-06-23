@@ -17,6 +17,7 @@ function addAnalyzeAllButton() {
 
 function addAnalyzeButton(reply) {
   const analyzeDiv = document.createElement("div");
+  reply.id = "reply-button-end-1";
   analyzeDiv.id = "analyze-button";
   const button = document.createElement("button");
   button.textContent = "analyze";
