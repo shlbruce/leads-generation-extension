@@ -19,7 +19,7 @@ function addAnalyzeAllButton() {
   const span = document.createElement("span");
   span.textContent = "analyze all";
   span.style.color = 'red';
-  span.style.fontSize = '14px'; 
+  span.style.fontSize = '14px';
   span.style.fontFamily = '"Segoe UI", "Roboto", "Helvetica", sans-serif';
 
   analyzeAllDiv.appendChild(span);
@@ -40,10 +40,54 @@ function addAnalyzeButton(reply) {
   const span = document.createElement("span");
   span.textContent = "analyze";
   span.style.color = 'red';
-  span.style.fontSize = '14px'; 
+  span.style.fontSize = '14px';
   span.style.fontFamily = '"Segoe UI", "Roboto", "Helvetica", sans-serif';
 
   analyzeDiv.appendChild(span);
   reply.parentNode.insertBefore(analyzeDiv, reply.nextSibling);
 }
-  
+
+function waitNextFrame() {
+  return new Promise(resolve => requestAnimationFrame(resolve));
+}
+
+// async function sequentialClicks(elements) {
+//   for (const el of elements) {
+//     el.click();
+//     await waitNextFrame(); // wait for the UI to respond before next click
+//   }
+// }
+
+
+function sortNewestFirst() {
+  const sortMenu = document.getElementById('sort-menu');
+  if (!sortMenu) {
+    return;
+  }
+
+  setTimeout(async () => {
+    // Ensure the menu is visible
+    const trigger = sortMenu.querySelector('tp-yt-paper-button[id="label"]');
+    if (!trigger) {
+      return;
+    }
+    trigger.click();
+    await waitNextFrame();
+    clickNewestFirst(sortMenu);
+  }, 5000);
+}
+
+function clickNewestFirst(sortMenu) {
+  const menu = sortMenu.querySelector('tp-yt-paper-listbox[id="menu"]');
+  if (!menu) {
+    return;
+  }
+
+  const sortOptions = menu.querySelectorAll('a');
+  for (const option of sortOptions) {
+    if (option.textContent.includes('Newest first')) {
+      option.click();
+      break;
+    }
+  }
+}

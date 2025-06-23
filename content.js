@@ -95,6 +95,7 @@ function addButtonsToAnalyze() {
 
   if (!document.getElementById('analyze-all-button')) {
     addAnalyzeAllButton();
+    sortNewestFirst();
   }
 
 
@@ -106,11 +107,7 @@ function addButtonsToAnalyze() {
   const replyButtonList = commentsSection.querySelectorAll('ytd-button-renderer[id="reply-button-end"]');
 
   replyButtonList.forEach((reply) => {
-
     addAnalyzeButton(reply);
-
-
-
     // ⛳ Click handler
     // prosConsButtun.addEventListener('click', async () => {
     //     const serverUrl = "http://localhost:3001"; 
