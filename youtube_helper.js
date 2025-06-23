@@ -26,6 +26,32 @@ function addAnalyzeAllButton() {
   sortMenu.parentNode.insertBefore(analyzeAllDiv, sortMenu.nextSibling);
 }
 
+function collectUserData(commentSection)  {
+  const mainSection = commentSection.querySelector('div[id="main"]');
+  if (!mainSection) {
+    return null;
+  }
+  const author = mainSection.querySelector('a[id="author-text"]');
+  if (!author) {
+    return null;
+  }
+  const authorName = author.textContent.trim();
+  let publishTime = mainSection.querySelector('span[id="published-time-text"]');
+  if (publishTime) {
+    publishTime = publishTime.textContent.trim();
+  }
+  const content = mainSection.querySelector('yt-attributed-string[id="content-text"]');
+  if (!content) {
+    return {};
+  }
+  const commentText = content.textContent.trim();
+  return {
+    author: authorName,
+    publishTime: publishTime,
+    content: commentText
+  }
+}
+
 function addAnalyzeButton(commentSection) {
 
   const reply = commentSection.querySelector('ytd-button-renderer[id="reply-button-end"]');
@@ -56,7 +82,7 @@ function addAnalyzeButton(commentSection) {
     const span = analyzeDiv.querySelector('span');
     // Backup original text
     const originalText = span.textContent;
-    const message = "I’m not a cruise person, this video may have change my mind.You two showed how much fun you were having!😅"
+    const userData = collectUserData(commentSection);
     // Set spinner
     span.innerHTML = `<span style="
           display: inline-block;
@@ -70,7 +96,7 @@ function addAnalyzeButton(commentSection) {
         "></span>`;
 
     try {
-      const result = await fetchAnalyzeResult(serverUrl, apiKey, message);
+      const result = await fetchAnalyzeResult(serverUrl, apiKey, userData);
       showParsedResult(result.answer);
     } catch (err) {
       console.error("❌ Error fetching pros/cons:", err);
