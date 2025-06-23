@@ -1,90 +1,35 @@
 function showParsedResult(parsed) {
-  // Create the popup container
   const popup = document.createElement("div");
+  popup.style.background = "#fff";
+  popup.style.border = "1px solid #ccc";
+  popup.style.padding = "20px";
+  popup.style.borderRadius = "8px";
+  popup.style.maxWidth = "400px";
+  popup.style.fontFamily = "sans-serif";
+  popup.style.fontSize = "18px"; // Increased font size
   popup.style.position = "fixed";
   popup.style.top = "50%";
   popup.style.left = "50%";
   popup.style.transform = "translate(-50%, -50%)";
-  popup.style.backgroundColor = "#fff";
-  popup.style.border = "1px solid #ccc";
-  popup.style.borderRadius = "8px";
-  popup.style.padding = "20px";
-  popup.style.width = "400px";
-  popup.style.maxHeight = "80vh";
-  popup.style.overflowY = "auto";
-  popup.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)";
-  popup.style.zIndex = "9999";
+  popup.style.boxShadow = "0 4px 24px rgba(0,0,0,0.15)";
+  popup.style.zIndex = "999999";
 
-  // Close button
-  const closeButton = document.createElement("div");
-  closeButton.textContent = "✖";
-  closeButton.style.position = "absolute";
-  closeButton.style.top = "10px";
-  closeButton.style.right = "15px";
-  closeButton.style.cursor = "pointer";
-  closeButton.style.fontSize = "18px";
-  closeButton.style.fontWeight = "bold";
-  closeButton.onclick = () => document.body.removeChild(popup);
-  popup.appendChild(closeButton);
-
-  // Content
-  for (const [category, info] of Object.entries(parsed)) {
-    if (category === "Overall Impression") {
-      const overall = document.createElement("p");
-      overall.style.marginTop = "20px";
-      overall.style.fontStyle = "italic";
-      overall.textContent = `💬 ${category}: ${info}`;
-      popup.appendChild(overall);
-      continue;
-    }
-
+  // Loop through each key-value in the parsed object
+  for (const [key, value] of Object.entries(parsed)) {
     const section = document.createElement("div");
     section.style.marginBottom = "10px";
 
     const header = document.createElement("div");
-    header.style.cursor = "pointer";
     header.style.padding = "5px 0";
 
-    const toggleIcon = document.createElement("span");
-    toggleIcon.textContent = "+ ";
-    toggleIcon.style.fontWeight = "bold";
-    toggleIcon.style.marginRight = "6px";
-
-    const hasExplanation = info.explanation && info.explanation !== "Not mentioned" && info.score !== null;
-
     const title = document.createElement("strong");
-    title.textContent = `${category}:`;
+    title.textContent = `${key}: `;
+    title.style.fontSize = "20px"; // Bold label a bit larger
 
-    const starSpan = document.createElement("span");
-    starSpan.style.marginLeft = "12px";
-
-    if (hasExplanation) {
-      const fullStars = "★".repeat(info.score);
-      const emptyStars = "☆".repeat(5 - info.score);
-      starSpan.style.color = "gold";
-      starSpan.textContent = `${fullStars}${emptyStars}`;
-    } else {
-      starSpan.style.color = "#999";
-      starSpan.textContent = "Not mentioned";
-    }
-
-    header.appendChild(toggleIcon);
     header.appendChild(title);
-    header.appendChild(starSpan);
-
-    const body = document.createElement("div");
-    body.style.display = "none";
-    body.style.marginLeft = "20px";
-    body.textContent = hasExplanation ? info.explanation : "";
-
-    header.onclick = () => {
-      const isCollapsed = body.style.display === "none";
-      body.style.display = isCollapsed ? "block" : "none";
-      toggleIcon.textContent = isCollapsed ? "− " : "+ ";
-    };
+    header.appendChild(document.createTextNode(value));
 
     section.appendChild(header);
-    section.appendChild(body);
     popup.appendChild(section);
   }
 

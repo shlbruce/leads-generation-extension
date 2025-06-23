@@ -68,9 +68,7 @@ function addAnalyzeButton(reply) {
 
     try {
       const result = await fetchAnalyzeResult(serverUrl, apiKey, message);
-      const parsed = JSON.parse(result.answer);
-      alert(parsed);
-      //showParsedResult(parsed);
+      showParsedResult(result.answer);
     } catch (err) {
       console.error("❌ Error fetching pros/cons:", err);
       alert("Failed to fetch analysis.");
