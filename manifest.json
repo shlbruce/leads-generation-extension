@@ -3,11 +3,12 @@
   "name": "Leads generation",
   "version": "1.0",
   "description": "Generate leads",
-  "permissions": ["scripting", "tabs", "activeTab"],
+  "permissions": ["activeTab", "scripting", "tabs"],
   "host_permissions": [
     "https://www.youtube.com/*",
     "https://localhost/*",
-    "http://localhost/*"
+    "http://localhost/*",
+    "<all_urls>"
   ],
   "background": {
     "service_worker": "background.js"
