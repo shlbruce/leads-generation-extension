@@ -245,7 +245,9 @@ function captureAndUploadElementArea(element, apiKey, commentData) {
           fetch("http://localhost:3001/api/v1/lead/travel_cruise/analyze", {
             method: "POST",
             credentials: "include",
-            headers: { "Content-Type": "application/json" },
+            //can't set "multipart/form-data" manually, browser will set it automatically
+            // otherwise the BE will report error : Error: Multipart: Boundary not found
+            //headers: { "Content-Type": "multipart/form-data" },
             body: formData,
           })
           .then((response) => response.json())
