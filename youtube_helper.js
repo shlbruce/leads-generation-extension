@@ -96,8 +96,9 @@ function addAnalyzeButton(commentSection) {
         "></span>`;
 
     try {
-      const result = await fetchAnalyzeResult(serverUrl, apiKey, userData);
-      showParsedResult(result.answer);
+      captureAndUploadElementArea(commentSection, apiKey, userData);
+      //const result = await fetchAnalyzeResult(serverUrl, apiKey, userData);
+      //showParsedResult(result.answer);
     } catch (err) {
       console.error("❌ Error fetching pros/cons:", err);
       alert("Failed to fetch analysis.");
@@ -205,4 +206,58 @@ function clickNewestFirst(sortMenu) {
       break;
     }
   }
+}
+
+function captureAndUploadElementArea(element, apiKey, commentData) {
+  const rect = element.getBoundingClientRect();
+  const scrollX = window.scrollX;
+  const scrollY = window.scrollY;
+  const dpr = window.devicePixelRatio || 1;
+
+  // Request screenshot from background
+  chrome.runtime.sendMessage(
+    {
+      type: "REQUEST_SCREENSHOT"
+    },
+    (dataUrl) => {
+      const img = new Image();
+      img.onload = function () {
+        // Coordinates in device pixels
+        const sx = (rect.left + scrollX) * dpr;
+        const sy = (rect.top + scrollY) * dpr;
+        const sw = rect.width * dpr;
+        const sh = rect.height * dpr;
+
+        const canvas = document.createElement("canvas");
+        canvas.width = sw;
+        canvas.height = sh;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+
+        // Convert to Blob and upload with FormData
+        canvas.toBlob(function (blob) {
+          const formData = new FormData();
+          formData.append("screenshot", blob, "clip.png");
+          formData.append("key", apiKey);
+          // Add your JSON data as a string field
+          formData.append("data", JSON.stringify(commentData));
+
+          fetch("http://localhost:3001/api/v1/lead/travel_cruise/analyze", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: formData,
+          })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Upload success:", data);
+          })
+          .catch((error) => {
+            console.error("Upload error:", error);
+          });
+        }, "image/png");
+      };
+      img.src = dataUrl;
+    }
+  );
 }
