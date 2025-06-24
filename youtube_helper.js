@@ -203,8 +203,6 @@ function clickNewestFirst(sortMenu) {
 
 function analyzeComment(serverUrl, element, apiKey, commentData, span) {
   const rect = element.getBoundingClientRect();
-  const scrollX = window.scrollX;
-  const scrollY = window.scrollY;
   const dpr = window.devicePixelRatio || 1;
 
   // Request screenshot from background
@@ -216,8 +214,8 @@ function analyzeComment(serverUrl, element, apiKey, commentData, span) {
       const img = new Image();
       img.onload = function () {
         // Coordinates in device pixels
-        const sx = (rect.left + scrollX) * dpr;
-        const sy = (rect.top + scrollY) * dpr;
+        const sx = rect.left * dpr;
+        const sy = rect.top * dpr;
         const sw = rect.width * dpr;
         const sh = rect.height * dpr;
 
@@ -229,37 +227,7 @@ function analyzeComment(serverUrl, element, apiKey, commentData, span) {
 
         // Convert to Blob and upload with FormData
         canvas.toBlob(async function (blob) {
-
-          //
-          //debug start
-          //
-          // Check if blob is created successfully
-          if (blob) {
-            const blobUrl = URL.createObjectURL(blob);
-            console.log('Blob URL created:', blobUrl); // Log the Blob URL
-
-            // Open the Blob URL in a new tab
-            window.open(blobUrl, "_blank");
-
-            // IMPORTANT: Revoke the Blob URL when no longer needed to free up memory
-            // You can do this after the tab has loaded, or when the user closes the tab,
-            // or just later in your code if you're keeping track. For a simple display,
-            // you might revoke it after a short delay or when the tab loses focus.
-            // For this example, we'll revoke it in the next tick to ensure the new tab has time to load it.
-            // In a more complex app, you might track opened tabs and revoke on close.
-            setTimeout(() => URL.revokeObjectURL(blobUrl), 1000); // Revoke after 1 second
-          } else {
-            console.error("Failed to create blob from canvas.");
-          }
-          //
-          //debug end
-          //
-
           try {
-            //debug
-            console.log('Blob size:', blob.size);
-            //
-
             const result = await fetchAnalyzeResultWithImage(serverUrl, apiKey, commentData, blob);
             showParsedResult(result.answer);
           }
