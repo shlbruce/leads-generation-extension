@@ -80,8 +80,6 @@ function addAnalyzeButton(commentSection) {
     const apiKey = "your-api-key";
 
     const span = analyzeDiv.querySelector('span');
-    // Backup original text
-    const originalText = span.textContent;
     const userData = collectUserData(commentSection);
     // Set spinner
     span.innerHTML = `<span style="
@@ -96,14 +94,11 @@ function addAnalyzeButton(commentSection) {
         "></span>`;
 
     try {
-      captureAndUploadElementArea(serverUrl, commentSection, apiKey, userData);
+      analyzeComment(serverUrl, commentSection, apiKey, userData, span);
     } catch (err) {
       console.error("❌ Error fetching pros/cons:", err);
       alert("Failed to fetch analysis.");
-    } finally {
-      // Restore text
-      span.textContent = originalText;
-    }
+    } 
   });
   reply.parentNode.insertBefore(analyzeDiv, reply.nextSibling);
 }
@@ -206,7 +201,7 @@ function clickNewestFirst(sortMenu) {
   }
 }
 
-function captureAndUploadElementArea(serverUrl, element, apiKey, commentData) {
+function analyzeComment(serverUrl, element, apiKey, commentData, span) {
   const rect = element.getBoundingClientRect();
   const scrollX = window.scrollX;
   const scrollY = window.scrollY;
@@ -234,8 +229,16 @@ function captureAndUploadElementArea(serverUrl, element, apiKey, commentData) {
 
         // Convert to Blob and upload with FormData
         canvas.toBlob(async function (blob) {
-          const result = await fetchAnalyzeResultWithImage(serverUrl, apiKey, commentData, blob);
-          showParsedResult(result.answer);
+          try {
+            const result = await fetchAnalyzeResultWithImage(serverUrl, apiKey, commentData, blob);
+            showParsedResult(result.answer);
+          }
+          catch (err) {
+            console.error("❌ Error fetching pros/cons:", err);
+            alert("Failed to fetch analysis.");
+          }finally {
+            span.textContent = "analyze";
+          }
         }, "image/png");
       };
       img.src = dataUrl;
