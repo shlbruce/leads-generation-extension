@@ -19,3 +19,18 @@ function followPathWithIndex(root, path) {
     return current;
   }
   
+  function waitNextFrame() {
+    return new Promise(resolve => requestAnimationFrame(resolve));
+  }
+
+  function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  
+
+// async function sequentialClicks(elements) {
+//   for (const el of elements) {
+//     el.click();
+//     await waitNextFrame(); // wait for the UI to respond before next click
+//   }
+// }

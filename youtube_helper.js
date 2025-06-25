@@ -21,12 +21,53 @@ function addAnalyzeAllButton() {
   span.style.color = 'red';
   span.style.fontSize = '14px';
   span.style.fontFamily = '"Segoe UI", "Roboto", "Helvetica", sans-serif';
-
   analyzeAllDiv.appendChild(span);
+
+  analyzeAllDiv.addEventListener('click', async () => {
+    const serverUrl = "http://localhost:3001";
+    const apiKey = "your-api-key";
+
+    const span = analyzeAllDiv.querySelector('span');
+    // Set spinner
+    span.innerHTML = `<span style="
+          display: inline-block;
+          width: 14px;
+          height: 14px;
+          border: 2px solid white;
+          border-top: 2px solid red;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+          vertical-align: middle;
+        "></span>`;
+
+    const contentsSection = document.getElementById('contents');
+    if (!contentsSection) {
+      return;
+    }
+
+    const commentSectionList = contentsSection.querySelectorAll('ytd-comment-view-model[id="comment-1"]');
+    const topFive = Array.from(commentSectionList).slice(0, 5);
+
+    for (const commentSection of topFive) {
+      const userData = collectUserData(commentSection);
+      if (userData) {
+        try {
+          await analyzeComment(serverUrl, commentSection, apiKey, userData, span);
+          console.log("✅ Successfully analyzed comment:", userData.author + " - " + userData.content);
+        } catch (err) {
+          console.error("❌ Error fetching analyze result:", err);
+        }
+      }
+      await delay(20000); // Wait 10 seconds before next iteration
+    }
+    
+    span.textContent = "analyze all";
+  });
+
   sortMenu.parentNode.insertBefore(analyzeAllDiv, sortMenu.nextSibling);
 }
 
-function collectUserData(commentSection)  {
+function collectUserData(commentSection) {
   const mainSection = commentSection.querySelector('div[id="main"]');
   if (!mainSection) {
     return null;
@@ -98,21 +139,10 @@ function addAnalyzeButton(commentSection) {
     } catch (err) {
       console.error("❌ Error fetching pros/cons:", err);
       alert("Failed to fetch analysis.");
-    } 
+    }
   });
   reply.parentNode.insertBefore(analyzeDiv, reply.nextSibling);
 }
-
-function waitNextFrame() {
-  return new Promise(resolve => requestAnimationFrame(resolve));
-}
-
-// async function sequentialClicks(elements) {
-//   for (const el of elements) {
-//     el.click();
-//     await waitNextFrame(); // wait for the UI to respond before next click
-//   }
-// }
 
 function showParsedResult(parsed) {
   const popup = document.createElement("div");
