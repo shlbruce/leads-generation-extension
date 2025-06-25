@@ -42,3 +42,31 @@ function getCurrentTabUrl() {
     });
   });
 }
+
+function isEntirelyInViewport(elem) {
+  if (!elem) return false;
+  const rect = elem.getBoundingClientRect();
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= window.innerHeight &&
+    rect.right <= window.innerWidth
+  );
+}
+
+function isElementVisible(elem) {
+  if (!elem) return false;
+  const style = window.getComputedStyle(elem);
+  return (
+    style &&
+    style.display !== 'none' &&
+    style.visibility !== 'hidden' &&
+    style.opacity !== '0'
+  );
+}
+
+function isReallyVisible(elem) {
+  return isElementVisible(elem) && isEntirelyInViewport(elem);
+}
+
+

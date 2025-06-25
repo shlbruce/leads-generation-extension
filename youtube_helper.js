@@ -48,13 +48,18 @@ function addAnalyzeAllButton() {
     const url = await getCurrentTabUrl();
 
     const commentSectionList = contentsSection.querySelectorAll('ytd-comment-view-model[id="comment-1"]');
-    const topFive = Array.from(commentSectionList).slice(0, 5);
 
-    for (const commentSection of topFive) {
+    for (const commentSection of commentSectionList) {
       const userData = collectUserData(commentSection);
-      userData.url = url;
+      
       if (userData) {
+        userData.url = url;
         try {
+
+          if (!isReallyVisible(commentSection)) {
+            commentSection.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+            await delay(5000); // Wait for scroll to finish
+          }
           await analyzeComment(serverUrl, commentSection, apiKey, userData, span);
           console.log("✅ Successfully analyzed comment:", userData.author + " - " + userData.content);
         } catch (err) {
