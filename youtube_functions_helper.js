@@ -53,6 +53,14 @@ function addAnalyzeAllButton() {
       const userData = collectUserData(commentSection);
       
       if (userData) {
+        if (isOldComment(userData)) {
+          console.log("Stopping old comment:", userData.author + " - " + userData.content);
+          break; // Stop processing if we hit an old comment
+        }
+        if (!isValidComment(userData)) {
+          console.log("Skipping invalid comment:", userData.author + " - " + userData.content);
+          continue; // Skip invalid comments
+        }
         userData.url = url;
         try {
 
@@ -193,4 +201,16 @@ function analyzeComment(serverUrl, element, apiKey, commentData, span) {
       img.src = dataUrl;
     }
   );
+}
+
+function isValidComment(userData) {
+  return userData.content.length > 10;
+}
+
+function isOldComment(userData) {
+  if (!userData.publishTime) {
+    return true; // If no publish time, consider it old
+  }
+  const minutes = timeAgoToMinutes(userData.publishTime);
+  return minutes > 3 * 24 * 60; // Consider comments older than 3 days as old
 }

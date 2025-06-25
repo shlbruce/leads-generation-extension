@@ -69,4 +69,31 @@ function isReallyVisible(elem) {
   return isElementVisible(elem) && isEntirelyInViewport(elem);
 }
 
+// 7 months ago
+// 1 year ago
+// 13 days ago
+// 1 day ago
+// 2 weeks ago 
+// 6 minutes ago
+// 5 hours ago
+function timeAgoToMinutes(str) {
+  const regex = /(\d+)\s+(minute|hour|day|week|month|year)s?\s+ago/i;
+  const match = str.match(regex);
+  if (!match) return null; // Invalid input
+
+  const value = parseInt(match[1], 10);
+  const unit = match[2].toLowerCase();
+
+  // Conversion rates to minutes
+  const factors = {
+    minute: 1,
+    hour: 60,
+    day: 60 * 24,
+    week: 60 * 24 * 7,
+    month: 60 * 24 * 30, // approx, not exact
+    year: 60 * 24 * 365  // approx, not exact
+  };
+
+  return value * factors[unit];
+}
 
