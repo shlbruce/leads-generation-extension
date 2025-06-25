@@ -45,11 +45,14 @@ function addAnalyzeAllButton() {
       return;
     }
 
+    const url = await getCurrentTabUrl();
+
     const commentSectionList = contentsSection.querySelectorAll('ytd-comment-view-model[id="comment-1"]');
     const topFive = Array.from(commentSectionList).slice(0, 5);
 
     for (const commentSection of topFive) {
       const userData = collectUserData(commentSection);
+      userData.url = url;
       if (userData) {
         try {
           await analyzeComment(serverUrl, commentSection, apiKey, userData, span);

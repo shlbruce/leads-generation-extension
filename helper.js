@@ -34,3 +34,11 @@ function followPathWithIndex(root, path) {
 //     await waitNextFrame(); // wait for the UI to respond before next click
 //   }
 // }
+
+function getCurrentTabUrl() {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ type: "GET_TAB_URL" }, function(response) {
+      resolve(response.url);
+    });
+  });
+}

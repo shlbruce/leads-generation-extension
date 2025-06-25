@@ -6,5 +6,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       // Indicate async response
       return true;
     }
+    else if (msg.type === "GET_TAB_URL") {
+        chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+          sendResponse({ url: tabs[0].url });
+        });
+        return true; // Keeps the message channel open for sendResponse
+      } 
   });
-  
