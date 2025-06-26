@@ -34,11 +34,11 @@ function setupAnalyzeAllButton() {
       const moreButton = replySection.querySelector('ytd-button-renderer[id="more-replies"]');
       if (moreButton && !isReallyVisible(moreButton)) {
         moreButton.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-        await delay(2000);
+        await delay(DELAY.SCROLL);
       }
       if (moreButton) {
         moreButton.click();
-        await delay(10000); // Wait for replies to load
+        await delay(DELAY.LOAD_REPLIES); // Wait for replies to load
       }
   
       const replyComments = replySection.querySelectorAll('div[id="contents-1"] ytd-comment-view-model');
@@ -184,13 +184,13 @@ async function processComments(commentList, url, span) {
     try {
       if (!isReallyVisible(commentSection)) {
         commentSection.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-        await delay(5000);
+        await delay(DELAY.SCROLL);
       }
       await analyzeComment(commentSection, userData, span, false);
       console.log("✅ Analyzed:", userData.author, "-", userData.content);
     } catch (err) {
       console.error("❌ Analyze error:", err);
     }
-    await delay(20000); // 20 sec between comments
+    await delay(DELAY.PROCESS_COMMENT); // 20 sec between comments
   }
 }

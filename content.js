@@ -1,13 +1,11 @@
 
 
-function addButtonsToAnalyze() {
+function setupButtonsToAnalyze() {
 
   if (!document.getElementById('analyze-all-button')) {
     setupAnalyzeAllButton();
     //sortNewestFirst();
   }
-
-
 
   const commentsSection = document.getElementById('comments');
   if (!commentsSection) {
@@ -40,6 +38,6 @@ function addButtonsToAnalyze() {
 }
 
 // Run initially and observe DOM changes
-addButtonsToAnalyze();
-const observer = new MutationObserver(addButtonsToAnalyze);
+setupButtonsToAnalyze();
+const observer = new MutationObserver(setupButtonsToAnalyze);
 observer.observe(document.body, { childList: true, subtree: true });  

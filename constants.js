@@ -1,6 +1,14 @@
 // constants.js
-window.ReplyEmailType = {
-    REPLY: "reply",
-    INCOMPLETE_TASKS: "incomplete_tasks"
-  };
+
+window.DELAY = {
+  LOAD_REPLIES: 5000,
+  LOAD_WHOLE_COMMENTS: 5000,
+  PROCESS_COMMENT: 20000,
+  SCROLL: 2000,
   
+  MORE_BUTTON: 2000,
+  
+};
+
+// Add more constants as needed!
+
