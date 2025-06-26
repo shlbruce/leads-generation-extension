@@ -47,36 +47,90 @@ function addAnalyzeAllButton() {
 
     const url = await getCurrentTabUrl();
 
-    const commentSectionList = contentsSection.querySelectorAll('ytd-comment-view-model[id="comment-1"]');
+    // const commentSectionList = contentsSection.querySelectorAll('ytd-comment-view-model[id="comment-1"]');
 
-    for (const commentSection of commentSectionList) {
-      const userData = collectUserData(commentSection);
-      
-      if (userData) {
-        if (isOldComment(userData)) {
-          console.log("Stopping old comment:", userData.author + " - " + userData.content);
-          break; // Stop processing if we hit an old comment
-        }
-        if (!isValidComment(userData)) {
-          console.log("Skipping invalid comment:", userData.author + " - " + userData.content);
-          continue; // Skip invalid comments
-        }
-        userData.url = url;
-        try {
+    // for (const commentSection of commentSectionList) {
+    //   const userData = collectUserData(commentSection);
 
-          if (!isReallyVisible(commentSection)) {
-            commentSection.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-            await delay(5000); // Wait for scroll to finish
-          }
-          await analyzeComment(serverUrl, commentSection, apiKey, userData, span);
-          console.log("✅ Successfully analyzed comment:", userData.author + " - " + userData.content);
-        } catch (err) {
-          console.error("❌ Error fetching analyze result:", err);
-        }
+    //   if (userData) {
+    //     if (isOldComment(userData)) {
+    //       console.log("Stopping old comment:", userData.author + " - " + userData.content);
+    //       break; // Stop processing if we hit an old comment
+    //     }
+    //     if (!isValidComment(userData)) {
+    //       console.log("Skipping invalid comment:", userData.author + " - " + userData.content);
+    //       continue; // Skip invalid comments
+    //     }
+    //     userData.url = url;
+    //     try {
+
+    //       if (!isReallyVisible(commentSection)) {
+    //         commentSection.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+    //         await delay(5000); // Wait for scroll to finish
+    //       }
+    //       await analyzeComment(serverUrl, commentSection, apiKey, userData, span);
+    //       console.log("✅ Successfully analyzed comment:", userData.author + " - " + userData.content);
+    //     } catch (err) {
+    //       console.error("❌ Error fetching analyze result:", err);
+    //     }
+    //   }
+    //   await delay(20000); // Wait 10 seconds before next iteration
+    // }
+
+    const repliesSectionList = contentsSection.querySelectorAll('div[id="replies"]');
+    for (const replySection of repliesSectionList) {
+
+      const moreButton = replySection.querySelector('ytd-button-renderer[id="more-replies"]');
+      if (!moreButton) {
+        continue;
       }
-      await delay(20000); // Wait 10 seconds before next iteration
+
+      if (!isReallyVisible(moreButton)) {
+        moreButton.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+        await delay(2000);
+      }
+
+      moreButton.click();
+      await delay(10000); // Wait for replies to load
+
+      const contentsSecton = replySection.querySelector('div[id="contents"]');
+      if (!contentsSecton) {
+        continue;
+      }
+      contentSectionList = contentsSecton.querySelectorAll('ytd-comment-view-model')
+      if (contentSectionList.length === 0) {
+        continue;
+      }
+
+      for (const commentSection of contentSectionList) {
+        const userData = collectUserData(commentSection);
+        console.log("Processing reply comment:", userData.author + " - " + userData.content);
+        if (userData) {
+          // if (isOldComment(userData)) {
+          //   console.log("Stopping old comment:", userData.author + " - " + userData.content);
+          //   break; // Stop processing if we hit an old comment
+          // }
+          // if (!isValidComment(userData)) {
+          //   console.log("Skipping invalid comment:", userData.author + " - " + userData.content);
+          //   continue; // Skip invalid comments
+          // }
+          userData.url = url;
+          try {
+  
+            if (!isReallyVisible(commentSection)) {
+              commentSection.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+              await delay(5000); // Wait for scroll to finish
+            }
+            await analyzeComment(serverUrl, commentSection, apiKey, userData, span);
+            console.log("✅ Successfully analyzed comment:", userData.author + " - " + userData.content);
+          } catch (err) {
+            console.error("❌ Error fetching analyze result:", err);
+          }
+        }
+        await delay(20000); // Wait 10 seconds before next iteration
+      }
     }
-    
+    console.log("✅ Successfully analyzed all replies.");
     span.textContent = "analyze all";
   });
 
