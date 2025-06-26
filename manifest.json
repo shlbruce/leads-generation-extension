@@ -3,7 +3,11 @@
   "name": "Leads generation",
   "version": "1.0",
   "description": "Generate leads",
-  "permissions": ["activeTab", "scripting", "tabs"],
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs"
+  ],
   "host_permissions": [
     "https://www.youtube.com/*",
     "https://localhost/*",
@@ -15,9 +19,22 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/*"],
-      "js": ["youtube_functions_helper.js", "youtube_functions.js", "youtube_view.js", "apis.js", "constants.js", "content.js", "helper.js"],
-      "css": ["styles.css"],
+      "matches": [
+        "https://www.youtube.com/*"
+      ],
+      "js": [
+        "constants.js",
+        "helper.js",
+        "apis.js",
+        "youtube_functions_helper.js",
+        "youtube_view.js",
+        "youtube_functions.js",
+        "youtube.js",
+        "content.js"
+      ],
+      "css": [
+        "styles.css"
+      ],
       "run_at": "document_idle"
     }
   ]
