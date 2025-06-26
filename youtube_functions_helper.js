@@ -76,27 +76,12 @@ function collectUserData(commentSection) {
   }
 }
 
-function addAnalyzeButton(commentSection) {
+function setupAnalyzeButton(commentSection) {
 
-  const reply = commentSection.querySelector('ytd-button-renderer[id="reply-button-end"]');
-
-  const analyzeDiv = document.createElement("div");
-  // change the id to avoid repeatedly adding the button
-  commentSection.id = "comment-1";
-  analyzeDiv.id = "analyze-button";
-  // Apply styling
-  analyzeDiv.style.border = '2px solid white';      // White border
-  analyzeDiv.style.borderRadius = '20px';           // Fully rounded corners
-  analyzeDiv.style.padding = '5px 12px';            // Comfortable spacing
-  analyzeDiv.style.cursor = 'pointer';              // Pointer on hover
-
-  const span = document.createElement("span");
-  span.textContent = "analyze";
-  span.style.color = 'red';
-  span.style.fontSize = '14px';
-  span.style.fontFamily = '"Segoe UI", "Roboto", "Helvetica", sans-serif';
-
-  analyzeDiv.appendChild(span);
+  const analyzeDiv = addAnalyzeButton(commentSection);
+  if (!analyzeDiv) {
+    return;
+  }
 
   //⛳ Click handler
   analyzeDiv.addEventListener('click', async () => {
@@ -122,7 +107,7 @@ function addAnalyzeButton(commentSection) {
       alert("Failed to fetch analysis.");
     }
   });
-  reply.parentNode.insertBefore(analyzeDiv, reply.nextSibling);
+  
 }
 
 function analyzeComment(element, commentData, span, isSingle) {

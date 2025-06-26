@@ -116,3 +116,38 @@ function addAnalyzeAllButton() {
   sortMenu.parentNode.insertBefore(analyzeAllDiv, sortMenu.nextSibling);
   return analyzeAllDiv;
 }
+
+function createAnalyzeButton() {
+  const analyzeDiv = document.createElement("div");
+  analyzeDiv.id = "analyze-button";
+  // Apply styling
+  analyzeDiv.style.border = '2px solid white';      // White border
+  analyzeDiv.style.borderRadius = '20px';           // Fully rounded corners
+  analyzeDiv.style.padding = '5px 12px';            // Comfortable spacing
+  analyzeDiv.style.cursor = 'pointer';              // Pointer on hover
+
+  const span = document.createElement("span");
+  span.textContent = "analyze";
+  span.style.color = 'red';
+  span.style.fontSize = '14px';
+  span.style.fontFamily = '"Segoe UI", "Roboto", "Helvetica", sans-serif';
+
+  analyzeDiv.appendChild(span);
+
+  return analyzeDiv;
+}
+
+function addAnalyzeButton(commentSection) {
+  const reply = commentSection.querySelector('ytd-button-renderer[id="reply-button-end"]');
+  if (!reply) {
+    return;
+  }
+
+  // change the id to avoid repeatedly adding the button
+  commentSection.id = "comment-1";
+  const analyzeDiv = createAnalyzeButton();
+
+  reply.parentNode.insertBefore(analyzeDiv, reply.nextSibling);
+
+  return analyzeDiv;
+}

@@ -17,7 +17,7 @@ function addButtonsToAnalyze() {
   const commentSectionList = commentsSection.querySelectorAll('ytd-comment-view-model[id="comment"]');
 
   commentSectionList.forEach((commentSection) => {
-    addAnalyzeButton(commentSection);
+    setupAnalyzeButton(commentSection);
   });
 
   const repliesSectionList = commentsSection.querySelectorAll('div[id="replies"]');
@@ -34,7 +34,7 @@ function addButtonsToAnalyze() {
     contentsSecton.id = "contents-1";
     contentSectionList.forEach((commentSection) => {
       // Add analyze button to each reply comment
-      addAnalyzeButton(commentSection);
+      setupAnalyzeButton(commentSection);
     });
   });
 }
