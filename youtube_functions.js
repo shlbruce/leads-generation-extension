@@ -22,14 +22,17 @@ function setupAnalyzeAllButton() {
   
     const url = await getCurrentTabUrl();
   
+    
+
+    //if add analyze button to all comments, then use comment-1 here
+    const topLevelComments = contentsSection.querySelectorAll('ytd-comment-view-model[id="comment"]');
     // Analyze top-level comments
-    console.log("🔍 Analyzing top-level comments...");
-    const topLevelComments = contentsSection.querySelectorAll('ytd-comment-view-model[id="comment-1"]');
+    console.log("🔍 Analyzing top-level comments... " + topLevelComments.length);
     await processComments(topLevelComments, url, span);
   
     // Analyze replies
     const repliesSectionList = contentsSection.querySelectorAll('div[id="replies"]');
-    console.log("🔍 Analyzing replies...");
+    console.log("🔍 Analyzing replies... " + repliesSectionList.length);
     for (const replySection of repliesSectionList) {
       const moreButton = replySection.querySelector('ytd-button-renderer[id="more-replies"]');
       if (moreButton && !isReallyVisible(moreButton)) {
@@ -41,13 +44,15 @@ function setupAnalyzeAllButton() {
         await delay(DELAY.LOAD_REPLIES); // Wait for replies to load
       }
   
-      const replyComments = replySection.querySelectorAll('div[id="contents-1"] ytd-comment-view-model');
+      const replyComments = replySection.querySelectorAll('div[id="contents"] ytd-comment-view-model');
       await processComments(replyComments, url, span);
     }
   
     console.log("✅ Analyzed all comments and replies.");
     span.textContent = "analyze all";
   });
+
+  return analyzeAllDiv;
 }
 
 function setupAnalyzeButton(commentSection) {

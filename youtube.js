@@ -1,11 +1,21 @@
 function setupAnalyzeButtonsInYoutube() {
 
     if (!document.getElementById('analyze-all-button')) {
-        setupAnalyzeAllButton();
+        const analyzeAllButton = setupAnalyzeAllButton();
         //sortNewestFirst();
-    }
 
-    setupAllAnalyzeButton();
+        // if uncommented, this will add analyze buttons to all comments on the page 
+        // and update "comment-1" for search comments. 
+        // const topLevelComments = contentsSection.querySelectorAll('ytd-comment-view-model[id="comment-1"]');
+        //setupAllAnalyzeButton(); 
+
+        if (analyzeAllButton) {
+            setTimeout(() => {
+                analyzeAllButton.click();
+            }
+            , DELAY.LOAD_PAGE);
+        }
+    }
 }
 
 function setupAllAnalyzeButton() {
