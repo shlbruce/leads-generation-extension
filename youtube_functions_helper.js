@@ -24,115 +24,50 @@ function addAnalyzeAllButton() {
   analyzeAllDiv.appendChild(span);
 
   analyzeAllDiv.addEventListener('click', async () => {
-    const serverUrl = "http://localhost:3001";
-    const apiKey = "your-api-key";
-
     const span = analyzeAllDiv.querySelector('span');
-    // Set spinner
+  
+    // Show spinner
     span.innerHTML = `<span style="
-          display: inline-block;
-          width: 14px;
-          height: 14px;
-          border: 2px solid white;
-          border-top: 2px solid red;
-          border-radius: 50%;
-          animation: spin 1s linear infinite;
-          vertical-align: middle;
-        "></span>`;
-
+        display: inline-block;
+        width: 14px; height: 14px;
+        border: 2px solid white;
+        border-top: 2px solid red;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        vertical-align: middle;"></span>`;
+  
     const contentsSection = document.getElementById('contents');
-    if (!contentsSection) {
-      return;
-    }
-
+    if (!contentsSection) return;
+  
     const url = await getCurrentTabUrl();
-
-    // const commentSectionList = contentsSection.querySelectorAll('ytd-comment-view-model[id="comment-1"]');
-
-    // for (const commentSection of commentSectionList) {
-    //   const userData = collectUserData(commentSection);
-
-    //   if (userData) {
-    //     if (isOldComment(userData)) {
-    //       console.log("Stopping old comment:", userData.author + " - " + userData.content);
-    //       break; // Stop processing if we hit an old comment
-    //     }
-    //     if (!isValidComment(userData)) {
-    //       console.log("Skipping invalid comment:", userData.author + " - " + userData.content);
-    //       continue; // Skip invalid comments
-    //     }
-    //     userData.url = url;
-    //     try {
-
-    //       if (!isReallyVisible(commentSection)) {
-    //         commentSection.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-    //         await delay(5000); // Wait for scroll to finish
-    //       }
-    //       await analyzeComment(serverUrl, commentSection, apiKey, userData, span);
-    //       console.log("✅ Successfully analyzed comment:", userData.author + " - " + userData.content);
-    //     } catch (err) {
-    //       console.error("❌ Error fetching analyze result:", err);
-    //     }
-    //   }
-    //   await delay(20000); // Wait 10 seconds before next iteration
-    // }
-
+  
+    // Analyze top-level comments
+    console.log("🔍 Analyzing top-level comments...");
+    const topLevelComments = contentsSection.querySelectorAll('ytd-comment-view-model[id="comment-1"]');
+    await processComments(topLevelComments, url, span);
+  
+    // Analyze replies
     const repliesSectionList = contentsSection.querySelectorAll('div[id="replies"]');
+    console.log("🔍 Analyzing replies...");
     for (const replySection of repliesSectionList) {
-
       const moreButton = replySection.querySelector('ytd-button-renderer[id="more-replies"]');
-      if (!moreButton) {
-        continue;
-      }
-
-      if (!isReallyVisible(moreButton)) {
+      if (moreButton && !isReallyVisible(moreButton)) {
         moreButton.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
         await delay(2000);
       }
-
-      moreButton.click();
-      await delay(10000); // Wait for replies to load
-
-      const contentsSecton = replySection.querySelector('div[id="contents"]');
-      if (!contentsSecton) {
-        continue;
+      if (moreButton) {
+        moreButton.click();
+        await delay(10000); // Wait for replies to load
       }
-      contentSectionList = contentsSecton.querySelectorAll('ytd-comment-view-model')
-      if (contentSectionList.length === 0) {
-        continue;
-      }
-
-      for (const commentSection of contentSectionList) {
-        const userData = collectUserData(commentSection);
-        console.log("Processing reply comment:", userData.author + " - " + userData.content);
-        if (userData) {
-          // if (isOldComment(userData)) {
-          //   console.log("Stopping old comment:", userData.author + " - " + userData.content);
-          //   break; // Stop processing if we hit an old comment
-          // }
-          // if (!isValidComment(userData)) {
-          //   console.log("Skipping invalid comment:", userData.author + " - " + userData.content);
-          //   continue; // Skip invalid comments
-          // }
-          userData.url = url;
-          try {
   
-            if (!isReallyVisible(commentSection)) {
-              commentSection.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-              await delay(5000); // Wait for scroll to finish
-            }
-            await analyzeComment(serverUrl, commentSection, apiKey, userData, span);
-            console.log("✅ Successfully analyzed comment:", userData.author + " - " + userData.content);
-          } catch (err) {
-            console.error("❌ Error fetching analyze result:", err);
-          }
-        }
-        await delay(20000); // Wait 10 seconds before next iteration
-      }
+      const replyComments = replySection.querySelectorAll('div[id="contents"] ytd-comment-view-model');
+      await processComments(replyComments, url, span);
     }
-    console.log("✅ Successfully analyzed all replies.");
+  
+    console.log("✅ Analyzed all comments and replies.");
     span.textContent = "analyze all";
   });
+  
 
   sortMenu.parentNode.insertBefore(analyzeAllDiv, sortMenu.nextSibling);
 }
@@ -187,8 +122,6 @@ function addAnalyzeButton(commentSection) {
 
   //⛳ Click handler
   analyzeDiv.addEventListener('click', async () => {
-    const serverUrl = "http://localhost:3001";
-    const apiKey = "your-api-key";
 
     const span = analyzeDiv.querySelector('span');
     const userData = collectUserData(commentSection);
@@ -205,7 +138,7 @@ function addAnalyzeButton(commentSection) {
         "></span>`;
 
     try {
-      analyzeComment(serverUrl, commentSection, apiKey, userData, span);
+      analyzeComment(commentSection, userData, span, true);
     } catch (err) {
       console.error("❌ Error fetching pros/cons:", err);
       alert("Failed to fetch analysis.");
@@ -214,7 +147,7 @@ function addAnalyzeButton(commentSection) {
   reply.parentNode.insertBefore(analyzeDiv, reply.nextSibling);
 }
 
-function analyzeComment(serverUrl, element, apiKey, commentData, span) {
+function analyzeComment(element, commentData, span, isSingle) {
   const rect = element.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
 
@@ -241,14 +174,16 @@ function analyzeComment(serverUrl, element, apiKey, commentData, span) {
         // Convert to Blob and upload with FormData
         canvas.toBlob(async function (blob) {
           try {
-            const result = await fetchAnalyzeResultWithImage(serverUrl, apiKey, commentData, blob);
+            const result = await fetchAnalyzeResultWithImage(commentData, blob);
             showParsedResult(result.answer);
           }
           catch (err) {
             console.error("❌ Error fetching pros/cons:", err);
             alert("Failed to fetch analysis.");
           } finally {
-            span.textContent = "analyze";
+            if (isSingle) {
+              span.textContent = "analyzed";
+            }
           }
         }, "image/png");
       };
@@ -267,4 +202,32 @@ function isOldComment(userData) {
   }
   const minutes = timeAgoToMinutes(userData.publishTime);
   return minutes > 3 * 24 * 60; // Consider comments older than 3 days as old
+}
+
+// Helper to process a list of comment nodes
+async function processComments(commentList, url, span) {
+  let count = 1;
+  for (const commentSection of commentList) {
+    if (count > 3) {
+      break;
+    }
+    count = count + 1;
+    const userData = collectUserData(commentSection);
+    if (!userData) continue;
+    //if (isOldComment(userData)) break;
+    //if (!isValidComment(userData)) continue;
+    userData.url = url;
+
+    try {
+      if (!isReallyVisible(commentSection)) {
+        commentSection.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+        await delay(5000);
+      }
+      await analyzeComment(commentSection, userData, span, false);
+      console.log("✅ Analyzed:", userData.author, "-", userData.content);
+    } catch (err) {
+      console.error("❌ Analyze error:", err);
+    }
+    await delay(20000); // 20 sec between comments
+  }
 }

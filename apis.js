@@ -1,5 +1,8 @@
 // apis.js
-async function fetchAnalyzeResult(serverUrl, apiKey, userData) {
+const serverUrl = "http://localhost:3001";
+const apiKey = "your-api-key";
+
+async function fetchAnalyzeResult(userData) {
     const url = `${serverUrl}/api/v1/lead/travel_cruise/analyze`;
     const response = await fetch(url, {
         method: "POST",
@@ -13,7 +16,7 @@ async function fetchAnalyzeResult(serverUrl, apiKey, userData) {
     return data;
 }
 
-async function fetchAnalyzeResultWithImage(serverUrl, apiKey, userData, blob) {
+async function fetchAnalyzeResultWithImage(userData, blob) {
     const formData = new FormData();
     formData.append("screenshot", blob, "clip.png");
     formData.append("key", apiKey);
