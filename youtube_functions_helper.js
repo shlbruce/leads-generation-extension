@@ -60,7 +60,7 @@ function addAnalyzeAllButton() {
         await delay(10000); // Wait for replies to load
       }
   
-      const replyComments = replySection.querySelectorAll('div[id="contents"] ytd-comment-view-model');
+      const replyComments = replySection.querySelectorAll('div[id="contents-1"] ytd-comment-view-model');
       await processComments(replyComments, url, span);
     }
   
@@ -208,7 +208,7 @@ function isOldComment(userData) {
 async function processComments(commentList, url, span) {
   let count = 1;
   for (const commentSection of commentList) {
-    if (count > 3) {
+    if (count > 2) {
       break;
     }
     count = count + 1;
