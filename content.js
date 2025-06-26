@@ -3,7 +3,7 @@
 function addButtonsToAnalyze() {
 
   if (!document.getElementById('analyze-all-button')) {
-    addAnalyzeAllButton();
+    setupAnalyzeAllButton();
     //sortNewestFirst();
   }
 

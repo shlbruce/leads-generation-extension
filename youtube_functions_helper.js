@@ -1,31 +1,12 @@
-function addAnalyzeAllButton() {
-  let sortMenu = document.getElementById('sort-menu');
-
-  if (!sortMenu) {
+function setupAnalyzeAllButton() {
+  const analyzeAllDiv = addAnalyzeAllButton();
+  if (!analyzeAllDiv) {
     return;
   }
 
-  sortMenu = sortMenu.parentElement
-
-  const analyzeAllDiv = document.createElement("div");
-  analyzeAllDiv.id = "analyze-all-button";
-
-  // Apply styling
-  analyzeAllDiv.style.border = '2px solid white';      // White border
-  analyzeAllDiv.style.borderRadius = '20px';           // Fully rounded corners
-  analyzeAllDiv.style.padding = '5px 12px';            // Comfortable spacing
-  analyzeAllDiv.style.cursor = 'pointer';              // Pointer on hover
-
-  const span = document.createElement("span");
-  span.textContent = "analyze all";
-  span.style.color = 'red';
-  span.style.fontSize = '14px';
-  span.style.fontFamily = '"Segoe UI", "Roboto", "Helvetica", sans-serif';
-  analyzeAllDiv.appendChild(span);
-
   analyzeAllDiv.addEventListener('click', async () => {
+    
     const span = analyzeAllDiv.querySelector('span');
-  
     // Show spinner
     span.innerHTML = `<span style="
         display: inline-block;
@@ -67,9 +48,6 @@ function addAnalyzeAllButton() {
     console.log("✅ Analyzed all comments and replies.");
     span.textContent = "analyze all";
   });
-  
-
-  sortMenu.parentNode.insertBefore(analyzeAllDiv, sortMenu.nextSibling);
 }
 
 function collectUserData(commentSection) {

@@ -53,34 +53,66 @@ function showParsedResult(parsed) {
 }
 
 function sortNewestFirst() {
-    const sortMenu = document.getElementById('sort-menu');
-    if (!sortMenu) {
+  const sortMenu = document.getElementById('sort-menu');
+  if (!sortMenu) {
+    return;
+  }
+
+  setTimeout(async () => {
+    // Ensure the menu is visible
+    const trigger = sortMenu.querySelector('tp-yt-paper-button[id="label"]');
+    if (!trigger) {
       return;
     }
-  
-    setTimeout(async () => {
-      // Ensure the menu is visible
-      const trigger = sortMenu.querySelector('tp-yt-paper-button[id="label"]');
-      if (!trigger) {
-        return;
-      }
-      trigger.click();
-      await waitNextFrame();
-      clickNewestFirst(sortMenu);
-    }, 5000);
+    trigger.click();
+    await waitNextFrame();
+    clickNewestFirst(sortMenu);
+  }, 5000);
+}
+
+function clickNewestFirst(sortMenu) {
+  const menu = sortMenu.querySelector('tp-yt-paper-listbox[id="menu"]');
+  if (!menu) {
+    return;
   }
-  
-  function clickNewestFirst(sortMenu) {
-    const menu = sortMenu.querySelector('tp-yt-paper-listbox[id="menu"]');
-    if (!menu) {
-      return;
-    }
-  
-    const sortOptions = menu.querySelectorAll('a');
-    for (const option of sortOptions) {
-      if (option.textContent.includes('Newest first')) {
-        option.click();
-        break;
-      }
+
+  const sortOptions = menu.querySelectorAll('a');
+  for (const option of sortOptions) {
+    if (option.textContent.includes('Newest first')) {
+      option.click();
+      break;
     }
   }
+}
+
+function createAnalyzeAllButton() {
+  const analyzeAllDiv = document.createElement("div");
+  analyzeAllDiv.id = "analyze-all-button";
+
+  // Apply styling
+  analyzeAllDiv.style.border = '2px solid white';      // White border
+  analyzeAllDiv.style.borderRadius = '20px';           // Fully rounded corners
+  analyzeAllDiv.style.padding = '5px 12px';            // Comfortable spacing
+  analyzeAllDiv.style.cursor = 'pointer';              // Pointer on hover
+
+  const span = document.createElement("span");
+  span.textContent = "analyze all";
+  span.style.color = 'red';
+  span.style.fontSize = '14px';
+  span.style.fontFamily = '"Segoe UI", "Roboto", "Helvetica", sans-serif';
+  analyzeAllDiv.appendChild(span);
+
+  return analyzeAllDiv;
+}
+
+function addAnalyzeAllButton() {
+  let sortMenu = document.getElementById('sort-menu');
+  if (!sortMenu) {
+    return;
+  }
+  sortMenu = sortMenu.parentElement
+
+  const analyzeAllDiv = createAnalyzeAllButton();
+  sortMenu.parentNode.insertBefore(analyzeAllDiv, sortMenu.nextSibling);
+  return analyzeAllDiv;
+}
