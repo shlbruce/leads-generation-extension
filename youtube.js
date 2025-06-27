@@ -1,8 +1,15 @@
 function setupAnalyzeButtonsInYoutube() {
 
     if (!document.getElementById('analyze-all-button')) {
+
+        window.scrollBy({
+            top: window.innerHeight / 3,
+            left: 0,
+            behavior: 'smooth'
+          });
+
         const analyzeAllButton = setupAnalyzeAllButton();
-        //sortNewestFirst();
+        sortNewestFirst();
 
         // if uncommented, this will add analyze buttons to all comments on the page 
         // and update "comment-1" for search comments. 
