@@ -41,6 +41,13 @@ function setupAnalyzeAllButton() {
       // replyCount++;
       // console.log(`🔍 Processing reply section ${replyCount}/${repliesSectionList.length}`);
       //debug end
+
+      const mainComment = replySection.previousElementSibling;
+      if (!mainComment) {
+        console.warn("❗ No main comment found for this reply section, skipping...");
+        continue;
+      }
+      const mainCommentData = collectUserData(mainComment);
       const moreButton = replySection.querySelector('ytd-button-renderer[id="more-replies"]');
       if (moreButton && !isReallyVisible(moreButton)) {
         moreButton.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
@@ -59,12 +66,12 @@ function setupAnalyzeAllButton() {
       //   continue;
       // }
       //debug end
-      await processComments(replyComments, url, span);
+      await processComments(replyComments, url, span, mainCommentData);
     }
   
     console.log("✅ Analyzed all comments and replies.");
     span.textContent = "analyze all";
-    chrome.runtime.sendMessage({ action: "page_processed" });
+    //chrome.runtime.sendMessage({ action: "page_processed" });
   });
 
   return analyzeAllDiv;
@@ -95,7 +102,7 @@ function setupAnalyzeButton(commentSection) {
         "></span>`;
 
     try {
-      analyzeComment(commentSection, userData, span, true);
+      analyzeComment(commentSection, userData, span, true, null);
     } catch (err) {
       console.error("❌ Error fetching pros/cons:", err);
       alert("Failed to fetch analysis.");
@@ -104,7 +111,7 @@ function setupAnalyzeButton(commentSection) {
   
 }
 
-function analyzeComment(element, commentData, span, isSingle) {
+function analyzeComment(element, commentData, span, isSingle, mainCommentData) {
   const rect = element.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
 
@@ -131,7 +138,7 @@ function analyzeComment(element, commentData, span, isSingle) {
         // Convert to Blob and upload with FormData
         canvas.toBlob(async function (blob) {
           try {
-            const result = await fetchAnalyzeResultWithImage(commentData, blob);
+            const result = await fetchAnalyzeResultWithImage(commentData, blob, mainCommentData);
             showParsedResult(result.answer);
           }
           catch (err) {
@@ -150,7 +157,7 @@ function analyzeComment(element, commentData, span, isSingle) {
 }
 
 // Helper to process a list of comment nodes
-async function processComments(commentList, url, span) {
+async function processComments(commentList, url, span, mainCommentData) {
   let count = 0;
   for (const commentSection of commentList) {
     count++;
@@ -168,7 +175,7 @@ async function processComments(commentList, url, span) {
         commentSection.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
         await delay(DELAY.SCROLL);
       }
-      await analyzeComment(commentSection, userData, span, false);
+      await analyzeComment(commentSection, userData, span, false, mainCommentData);
       console.log("✅ Analyzed:", userData.author, "-", userData.content);
     } catch (err) {
       console.error("❌ Analyze error:", err);

@@ -16,12 +16,15 @@ async function fetchAnalyzeResult(userData) {
     return data;
 }
 
-async function fetchAnalyzeResultWithImage(userData, blob) {
+async function fetchAnalyzeResultWithImage(userData, blob, mainCommentData) {
     const formData = new FormData();
     formData.append("screenshot", blob, "clip.png");
     formData.append("key", apiKey);
     // Add your JSON data as a string field
     formData.append("data", JSON.stringify(userData));
+    if (mainCommentData) {
+        formData.append("main_comment_data", JSON.stringify(mainCommentData));
+    }
     const url = `${serverUrl}/api/v1/lead/travel_cruise/analyze`;
     const response = await fetch(url, {
         method: "POST",
