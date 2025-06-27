@@ -87,8 +87,10 @@ function setupAnalyzeButton(commentSection) {
   //⛳ Click handler
   analyzeDiv.addEventListener('click', async () => {
 
+    const url = await getCurrentTabUrl();
     const span = analyzeDiv.querySelector('span');
     const userData = collectUserData(commentSection);
+    userData.url = url;
     // Set spinner
     span.innerHTML = `<span style="
           display: inline-block;
