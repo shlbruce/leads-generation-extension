@@ -6,5 +6,6 @@ function init() {
   }
 }
 
+
 const observer = new MutationObserver(init);
 observer.observe(document.body, { childList: true, subtree: true });  

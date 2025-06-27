@@ -30,12 +30,16 @@
         "youtube_view.js",
         "youtube_functions.js",
         "youtube.js",
-        "content.js"
+        "content.js",
+        "popup.js"
       ],
       "css": [
         "styles.css"
       ],
       "run_at": "document_idle"
     }
-  ]
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
 }
