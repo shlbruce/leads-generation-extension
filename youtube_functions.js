@@ -22,7 +22,9 @@ function setupAnalyzeAllButton() {
   
     const url = await getCurrentTabUrl();
   
-    
+    //
+    // Default there are 20 comments until you scroll down, so there are 20 replies sections. even if there are no replies.
+    // if no replies, the block - div[id="replies"] is hidden. 
 
     //if add analyze button to all comments, then use comment-1 here
     const topLevelComments = contentsSection.querySelectorAll('ytd-comment-view-model[id="comment"]');
@@ -32,8 +34,13 @@ function setupAnalyzeAllButton() {
   
     // Analyze replies
     const repliesSectionList = contentsSection.querySelectorAll('div[id="replies"]');
+    //let replyCount = 0;
     console.log("🔍 Analyzing replies... " + repliesSectionList.length);
     for (const replySection of repliesSectionList) {
+      //debug begin
+      // replyCount++;
+      // console.log(`🔍 Processing reply section ${replyCount}/${repliesSectionList.length}`);
+      //debug end
       const moreButton = replySection.querySelector('ytd-button-renderer[id="more-replies"]');
       if (moreButton && !isReallyVisible(moreButton)) {
         moreButton.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
@@ -43,8 +50,15 @@ function setupAnalyzeAllButton() {
         moreButton.click();
         await delay(DELAY.LOAD_REPLIES); // Wait for replies to load
       }
-  
+      
       const replyComments = replySection.querySelectorAll('div[id="contents"] ytd-comment-view-model');
+      //debug begin
+      // console.log(`🔍 Found ${replyComments.length} replies in section ${replyCount}/${repliesSectionList.length}`)
+      // if (replyComments.length === 0) {
+      //   console.warn("❗ No replies found in this section, skipping...");
+      //   continue;
+      // }
+      //debug end
       await processComments(replyComments, url, span);
     }
   
@@ -137,12 +151,12 @@ function analyzeComment(element, commentData, span, isSingle) {
 
 // Helper to process a list of comment nodes
 async function processComments(commentList, url, span) {
-  let count = 1;
+  let count = 0;
   for (const commentSection of commentList) {
-    if (count > 2) {
+    count++;
+    if (count > 1) {
       break;
     }
-    count = count + 1;
     const userData = collectUserData(commentSection);
     if (!userData) continue;
     //if (isOldComment(userData)) break;
