@@ -46,7 +46,7 @@ async function search_cruise() {
                 // }
                 const videoAnchor = thumbnail.querySelector("a#thumbnail");
                 //https://www.youtube.com/shorts/ReLbQsajSms
-                if (videoAnchor.href.incluedes("www.youtube.com/shorts")) {
+                if (videoAnchor.href.includes("www.youtube.com/shorts")) {
                     console.warn("❗ Skipping shorts video: " + videoAnchor.href);
                     continue;
                 }
