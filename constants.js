@@ -9,5 +9,6 @@ window.DELAY = {
   UPDATE_DOM: 2000,
 };
 
+window.DEBUG_MODE = true; // Set to true for debugging
 // Add more constants as needed!
 

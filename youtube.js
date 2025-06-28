@@ -2,25 +2,35 @@ function setupAnalyzeButtonsInYoutube() {
 
     if (!document.getElementById('analyze-all-button')) {
 
-        window.scrollBy({
-            top: window.innerHeight / 3,
-            left: 0,
-            behavior: 'smooth'
-          });
+        if (!DEBUG_MODE) {
+            window.scrollBy({
+                top: window.innerHeight / 3,
+                left: 0,
+                behavior: 'smooth'
+              });
+        }
+        
 
         const analyzeAllButton = setupAnalyzeAllButton();
-        sortNewestFirst();
+
+        if (!DEBUG_MODE) {
+            sortNewestFirst();
+        }
 
         // if uncommented, this will add analyze buttons to all comments on the page 
         // and update "comment-1" for search comments. 
         // const topLevelComments = contentsSection.querySelectorAll('ytd-comment-view-model[id="comment-1"]');
-        //setupAllAnalyzeButton(); 
+        if (DEBUG_MODE) {
+            setupAllAnalyzeButton(); 
+        }
 
-        if (analyzeAllButton) {
-            setTimeout(() => {
-                analyzeAllButton.click();
+        if (!DEBUG_MODE) {
+            if (analyzeAllButton) {
+                setTimeout(() => {
+                    analyzeAllButton.click();
+                }
+                , DELAY.LOAD_PAGE);
             }
-            , DELAY.LOAD_PAGE);
         }
     }
 }

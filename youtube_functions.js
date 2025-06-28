@@ -66,7 +66,10 @@ function setupAnalyzeAllButton() {
       //   continue;
       // }
       //debug end
-      await processComments(replyComments, url, span, mainCommentData);
+
+      if (!DEBUG_MODE) {
+        await processComments(replyComments, url, span, mainCommentData);
+      }
     }
   
     console.log("✅ Analyzed all comments and replies.");
@@ -132,7 +135,9 @@ async function analyzeComment(commentSection, commentData, span, isSingle, mainC
     try {
       const result = await fetchAnalyzeResultWithImage(commentData, screenshot, screenshot_updated, mainCommentData);
       console.log("✅ Analysis result: " + result.answer.lead + " - " + result.answer.level);
-      //showParsedResult(result.answer);
+      if (DEBUG_MODE) {
+        showParsedResult(result.answer);
+      }
     } catch (err) {
       console.error("❌ Error fetching pros/cons:", err);
       alert("Failed to fetch analysis.");
