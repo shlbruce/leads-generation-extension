@@ -10,6 +10,17 @@ async function search_cruise() {
         console.warn("❗ Content section not found, cannot search for 'cruise'.");
         return;
     }
+
+    const urlSet = new Set();
+
+    const result = await chrome.storage.local.get(['cruiseUrls']);
+    const savedUrls = result.cruiseUrls || [];
+    for (const url of savedUrls) {
+    urlSet.add(url);
+    }
+    // urlSet is now updated
+    console.log("Loaded URLs into urlSet:", urlSet);
+
     let count = 0;
 
     while (count < 100) {
@@ -25,6 +36,7 @@ async function search_cruise() {
             for (const video of videoList) {
                 const thumbnail = video.querySelector("ytd-thumbnail");
                 if (!thumbnail) {
+                    console.warn("❗ Thumbnail not found, skipping this video.");
                     return;
                 }
 
@@ -34,12 +46,13 @@ async function search_cruise() {
                 // }
                 const videoAnchor = thumbnail.querySelector("a#thumbnail");
                 console.log("🔍 Searching for 'cruise' " + videoAnchor.href);
+                urlSet.add(videoAnchor.href);
                 count++;
             }
         }
         // Scroll down to load more content
         window.scrollBy({
-            top: window.innerHeight / 3,
+            top: window.innerHeight * 2 / 3,
             left: 0,
             behavior: 'smooth'
         });
@@ -47,4 +60,6 @@ async function search_cruise() {
         await delay(DELAY.LOAD_PAGE);
     }
 
+    await chrome.storage.local.set({ cruiseUrls: Array.from(urlSet) });
+    console.log("URLs saved to chrome.storage.local");
 }
