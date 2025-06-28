@@ -3,7 +3,7 @@ const serverUrl = "http://localhost:3001";
 const apiKey = "your-api-key";
 
 async function fetchAnalyzeResult(userData) {
-    const url = `${serverUrl}/api/v1/lead/travel_cruise/analyze`;
+    const url = `${serverUrl}/api/v1/leads/analyze`;
     const response = await fetch(url, {
         method: "POST",
         credentials: "include",
@@ -25,7 +25,7 @@ async function fetchAnalyzeResultWithImage(userData, blob, mainCommentData) {
     if (mainCommentData) {
         formData.append("main_comment_data", JSON.stringify(mainCommentData));
     }
-    const url = `${serverUrl}/api/v1/lead/travel_cruise/analyze`;
+    const url = `${serverUrl}/api/v1/leads/analyze`;
     const response = await fetch(url, {
         method: "POST",
         credentials: "include",
