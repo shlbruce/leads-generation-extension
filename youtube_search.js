@@ -45,6 +45,11 @@ async function search_cruise() {
                 //     await delay(DELAY.SCROLL);
                 // }
                 const videoAnchor = thumbnail.querySelector("a#thumbnail");
+                //https://www.youtube.com/shorts/ReLbQsajSms
+                if (videoAnchor.href.incluedes("www.youtube.com/shorts")) {
+                    console.warn("❗ Skipping shorts video: " + videoAnchor.href);
+                    continue;
+                }
                 console.log("🔍 Searching for 'cruise' " + videoAnchor.href);
                 urlSet.add(videoAnchor.href);
                 count++;
