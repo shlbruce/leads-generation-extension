@@ -115,18 +115,22 @@ function setupAnalyzeButton(commentSection) {
 
 async function analyzeComment(commentSection, commentData, span, isSingle, mainCommentData) {
 
-  truncateAuthorSpan(commentSection);
-
   const rect = commentSection.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
 
   try {
-    const dataUrl = await getScreenshot();
-    const img = await loadImage(dataUrl);
-    const blob = await cropImageToBlob(img, rect, dpr);
+    let dataUrl = await getScreenshot();
+    let img = await loadImage(dataUrl);
+    const screenshot = await cropImageToBlob(img, rect, dpr);
+
+    truncateAuthorSpan(commentSection);
+    await delay(DELAY.UPDATE_DOM); // Wait for screenshot to be ready
+    dataUrl = await getScreenshot();
+    img = await loadImage(dataUrl);
+    const screenshot_updated = await cropImageToBlob(img, rect, dpr);
 
     try {
-      const result = await fetchAnalyzeResultWithImage(commentData, blob, mainCommentData);
+      const result = await fetchAnalyzeResultWithImage(commentData, screenshot, screenshot_updated, mainCommentData);
       showParsedResult(result.answer);
     } catch (err) {
       console.error("❌ Error fetching pros/cons:", err);

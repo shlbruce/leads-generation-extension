@@ -16,9 +16,10 @@ async function fetchAnalyzeResult(userData) {
     return data;
 }
 
-async function fetchAnalyzeResultWithImage(userData, blob, mainCommentData) {
+async function fetchAnalyzeResultWithImage(userData, screenshot, screenshot_updated, mainCommentData) {
     const formData = new FormData();
-    formData.append("screenshot", blob, "clip.png");
+    formData.append("screenshot", screenshot, "screenshot.png");
+    formData.append("screenshot_updated", screenshot_updated, "screenshot_updated.png");
     formData.append("key", apiKey);
     // Add your JSON data as a string field
     formData.append("data", JSON.stringify(userData));

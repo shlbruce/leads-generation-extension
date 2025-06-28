@@ -67,7 +67,7 @@ function sortNewestFirst() {
     trigger.click();
     await waitNextFrame();
     clickNewestFirst(sortMenu);
-  }, DelayNode.LOAD_WHOLE_COMMENTS);
+  }, DELAY.LOAD_WHOLE_COMMENTS);
 }
 
 function clickNewestFirst(sortMenu) {
