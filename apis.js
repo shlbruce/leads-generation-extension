@@ -36,7 +36,26 @@ async function fetchAnalyzeResultWithImage(userData, screenshot, screenshot_upda
         body: formData,
     });
 
-    if (!response.ok) throw new Error("Network error");
+    if (!response.ok) {
+        //can't throw error, it will stop the execution of service
+        console.error("❌ Error in fetchAnalyzeResultWithImage:", response.statusText);
+        let errorMessage = response.statusText;
+        try {
+            const errorData = await response.json();
+            if (errorData && errorData.error) {
+                errorMessage = errorData.error;
+            }
+        } catch (err) {
+            // Could not parse JSON, use statusText
+        }
+        return {
+            answer: {
+                lead: errorMessage,
+                level: null,
+                reason: response.statusText,
+            }
+        }
+    }
     const data = await response.json();
     return data;
 }

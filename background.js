@@ -24,7 +24,8 @@ function tabUpdateListener(tabId, changeInfo, tab) {
   if (tabId === workingTabId && changeInfo.status === 'complete') {
     // Page finished loading: tell content script to process
     console.log(`🔄 Page loaded: ${tab.url}`);
-    chrome.tabs.sendMessage(tabId, { action: "process_page" });
+    // content scripts monitor dom page changes, so we needn't send message to content script
+    //chrome.tabs.sendMessage(tabId, { action: "process_page" });
   }
 }
 
