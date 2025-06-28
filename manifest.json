@@ -26,6 +26,7 @@
         "constants.js",
         "helper.js",
         "apis.js",
+        "youtube_search.js",
         "youtube_functions_helper.js",
         "youtube_view.js",
         "youtube_functions.js",

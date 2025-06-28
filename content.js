@@ -1,7 +1,13 @@
 function init() {
   const hostname = window.location.hostname;
+  const fullUrl = window.location.href;
+
   if (hostname === "www.youtube.com") {
-      setupAnalyzeButtonsInYoutube();
+      if (fullUrl.includes("search_query=cruise")) {
+          search_cruise();
+      } else {
+          setupAnalyzeButtonsInYoutube();
+      }
       return;
   }
 }
