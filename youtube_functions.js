@@ -131,7 +131,8 @@ async function analyzeComment(commentSection, commentData, span, isSingle, mainC
 
     try {
       const result = await fetchAnalyzeResultWithImage(commentData, screenshot, screenshot_updated, mainCommentData);
-      showParsedResult(result.answer);
+      console.log("✅ Analysis result: " + result.answer.lead + " - " + result.answer.level);
+      //showParsedResult(result.answer);
     } catch (err) {
       console.error("❌ Error fetching pros/cons:", err);
       alert("Failed to fetch analysis.");
@@ -148,16 +149,16 @@ async function analyzeComment(commentSection, commentData, span, isSingle, mainC
 
 // Helper to process a list of comment nodes
 async function processComments(commentList, url, span, mainCommentData) {
-  let count = 0;
+  //let count = 0;
   for (const commentSection of commentList) {
-    count++;
-    if (count > 1) {
-      break;
-    }
+    // count++;
+    // if (count > 1) {
+    //   break;
+    // }
     const userData = collectUserData(commentSection);
     if (!userData) continue;
-    //if (isOldComment(userData)) break;
-    //if (!isValidComment(userData)) continue;
+    if (isOldComment(userData)) continue;
+    if (!isValidComment(userData)) continue;
     userData.url = url;
 
     try {
