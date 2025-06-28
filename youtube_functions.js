@@ -71,7 +71,7 @@ function setupAnalyzeAllButton() {
   
     console.log("✅ Analyzed all comments and replies.");
     span.textContent = "analyze all";
-    //chrome.runtime.sendMessage({ action: "page_processed" });
+    chrome.runtime.sendMessage({ action: "page_processed" });
   });
 
   return analyzeAllDiv;

@@ -2,11 +2,11 @@ function setupAnalyzeButtonsInYoutube() {
 
     if (!document.getElementById('analyze-all-button')) {
 
-        // window.scrollBy({
-        //     top: window.innerHeight / 3,
-        //     left: 0,
-        //     behavior: 'smooth'
-        //   });
+        window.scrollBy({
+            top: window.innerHeight / 3,
+            left: 0,
+            behavior: 'smooth'
+          });
 
         const analyzeAllButton = setupAnalyzeAllButton();
         sortNewestFirst();
@@ -16,12 +16,12 @@ function setupAnalyzeButtonsInYoutube() {
         // const topLevelComments = contentsSection.querySelectorAll('ytd-comment-view-model[id="comment-1"]');
         //setupAllAnalyzeButton(); 
 
-        // if (analyzeAllButton) {
-        //     setTimeout(() => {
-        //         analyzeAllButton.click();
-        //     }
-        //     , DELAY.LOAD_PAGE);
-        // }
+        if (analyzeAllButton) {
+            setTimeout(() => {
+                analyzeAllButton.click();
+            }
+            , DELAY.LOAD_PAGE);
+        }
     }
 }
 
