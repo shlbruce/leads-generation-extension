@@ -36,3 +36,25 @@ function isOldComment(userData) {
   return minutes > 3 * 24 * 60; // Consider comments older than 3 days as old
 }
 
+function truncateAuthorSpan(commentSection) {
+
+  const mainSection = commentSection.querySelector('div[id="main"]');
+  if (!mainSection) {
+    return null;
+  }
+  const author = mainSection.querySelector('a[id="author-text"]');
+  if (!author) {
+    return null;
+  }
+
+  const span = mainSection.querySelector('#author-text span');
+  if (!span) {
+    return;
+  }
+  const original = span.textContent.trim();
+  if (original.length > 3) {
+    span.textContent = original.slice(0, 3) + "...";
+  }
+}
+
+

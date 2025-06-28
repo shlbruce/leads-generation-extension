@@ -113,8 +113,11 @@ function setupAnalyzeButton(commentSection) {
   
 }
 
-async function analyzeComment(element, commentData, span, isSingle, mainCommentData) {
-  const rect = element.getBoundingClientRect();
+async function analyzeComment(commentSection, commentData, span, isSingle, mainCommentData) {
+
+  truncateAuthorSpan(commentSection);
+
+  const rect = commentSection.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
 
   try {
