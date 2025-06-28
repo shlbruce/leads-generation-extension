@@ -113,55 +113,14 @@ function setupAnalyzeButton(commentSection) {
   
 }
 
-function getScreenshot() {
-  // Returns a Promise that resolves with the dataUrl
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage(
-      { type: "REQUEST_SCREENSHOT" },
-      (dataUrl) => {
-        if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
-        } else {
-          resolve(dataUrl);
-        }
-      }
-    );
-  });
-}
-
 async function analyzeComment(element, commentData, span, isSingle, mainCommentData) {
   const rect = element.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
 
   try {
     const dataUrl = await getScreenshot();
-
-    const img = new Image();
-    // We need to await for image load:
-    await new Promise((resolve, reject) => {
-      img.onload = resolve;
-      img.onerror = reject;
-      img.src = dataUrl;
-    });
-
-    // Coordinates in device pixels
-    const sx = rect.left * dpr;
-    const sy = rect.top * dpr;
-    const sw = rect.width * dpr;
-    const sh = rect.height * dpr;
-
-    const canvas = document.createElement("canvas");
-    canvas.width = sw;
-    canvas.height = sh;
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
-
-    // Promisify toBlob
-    const blob = await new Promise((resolve) =>
-      canvas.toBlob(resolve, "image/png")
-    );
-
-    if (!blob) throw new Error("Failed to create image blob");
+    const img = await loadImage(dataUrl);
+    const blob = await cropImageToBlob(img, rect, dpr);
 
     try {
       const result = await fetchAnalyzeResultWithImage(commentData, blob, mainCommentData);
@@ -179,7 +138,6 @@ async function analyzeComment(element, commentData, span, isSingle, mainCommentD
     alert("Failed to analyze comment.");
   }
 }
-
 
 // Helper to process a list of comment nodes
 async function processComments(commentList, url, span, mainCommentData) {

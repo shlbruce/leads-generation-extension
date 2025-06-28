@@ -35,3 +35,4 @@ function isOldComment(userData) {
   const minutes = timeAgoToMinutes(userData.publishTime);
   return minutes > 3 * 24 * 60; // Consider comments older than 3 days as old
 }
+

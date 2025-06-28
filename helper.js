@@ -1,32 +1,32 @@
 function followPathWithIndex(root, path) {
-    let current = root;
-  
-    for (const step of path) {
-      let match = step.match(/^([a-zA-Z0-9\-\._]+)(\[(\d+)\])?$/); // e.g., div[3] or div
-      let selector = step;
-      let index = 1; // default to first match
-  
-      if (match) {
-        selector = match[1];           // tag or class
-        index = match[3] ? Number(match[3]) : 1;
-      }
-  
-      const elements = current.querySelectorAll(':scope > div');
-      if (elements.length < index) return null; // not enough matches
-      current = elements[index - 1]; // 0-based index
-      if (!current) return null;
-    }
-    return current;
-  }
-  
-  function waitNextFrame() {
-    return new Promise(resolve => requestAnimationFrame(resolve));
-  }
+  let current = root;
 
-  function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  for (const step of path) {
+    let match = step.match(/^([a-zA-Z0-9\-\._]+)(\[(\d+)\])?$/); // e.g., div[3] or div
+    let selector = step;
+    let index = 1; // default to first match
+
+    if (match) {
+      selector = match[1];           // tag or class
+      index = match[3] ? Number(match[3]) : 1;
+    }
+
+    const elements = current.querySelectorAll(':scope > div');
+    if (elements.length < index) return null; // not enough matches
+    current = elements[index - 1]; // 0-based index
+    if (!current) return null;
   }
-  
+  return current;
+}
+
+function waitNextFrame() {
+  return new Promise(resolve => requestAnimationFrame(resolve));
+}
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
 // async function sequentialClicks(elements) {
 //   for (const el of elements) {
@@ -37,7 +37,7 @@ function followPathWithIndex(root, path) {
 
 function getCurrentTabUrl() {
   return new Promise((resolve) => {
-    chrome.runtime.sendMessage({ type: "GET_TAB_URL" }, function(response) {
+    chrome.runtime.sendMessage({ type: "GET_TAB_URL" }, function (response) {
       resolve(response.url);
     });
   });
@@ -97,3 +97,47 @@ function timeAgoToMinutes(str) {
   return value * factors[unit];
 }
 
+function getScreenshot() {
+  // Returns a Promise that resolves with the dataUrl
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(
+      { type: "REQUEST_SCREENSHOT" },
+      (dataUrl) => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve(dataUrl);
+        }
+      }
+    );
+  });
+}
+
+function loadImage(dataUrl) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = dataUrl;
+  });
+}
+
+function cropImageToBlob(img, rect, dpr) {
+  const sx = rect.left * dpr;
+  const sy = rect.top * dpr;
+  const sw = rect.width * dpr;
+  const sh = rect.height * dpr;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = sw;
+  canvas.height = sh;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+
+  return new Promise((resolve, reject) =>
+    canvas.toBlob((blob) => {
+      if (blob) resolve(blob);
+      else reject(new Error("Failed to create image blob"));
+    }, "image/png")
+  );
+}
