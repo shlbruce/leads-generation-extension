@@ -7,9 +7,13 @@ function startSequentialProcessing() {
   chrome.storage.local.get(['cruiseUrls'], (result) => {
     currentUrlList = result.cruiseUrls || [];
     if (!currentUrlList.length) {
-      alert("No URLs found in storage!");
+      console.error("❌ No URLs found in storage to process.");
       return;
     }
+
+    // Shuffle the URL list randomly before processing
+    shuffleArray(currentUrlList);
+    
     currentIndex = 0;
     // Open the first URL in a new tab
     chrome.tabs.create({ url: currentUrlList[currentIndex], active: true }, function (tab) {

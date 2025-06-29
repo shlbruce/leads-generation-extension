@@ -132,23 +132,18 @@ async function analyzeComment(commentSection, commentData, span, isSingle, mainC
     img = await loadImage(dataUrl);
     const screenshot_updated = await cropImageToBlob(img, rect, dpr);
 
-    try {
-      const result = await fetchAnalyzeResultWithImage(commentData, screenshot, screenshot_updated, mainCommentData);
-      console.log("✅ Analysis result: " + result.answer.lead + " - " + result.answer.level);
-      if (DEBUG_MODE) {
-        showParsedResult(result.answer);
-      }
-    } catch (err) {
-      console.error("❌ Error fetching pros/cons:", err);
-      alert("Failed to fetch analysis.");
-    } finally {
-      if (isSingle) {
-        span.textContent = "analyzed";
-      }
+    const result = await fetchAnalyzeResultWithImage(commentData, screenshot, screenshot_updated, mainCommentData);
+    console.log("✅ Analysis result: " + result.answer.lead + " - " + result.answer.level);
+    if (DEBUG_MODE) {
+      showParsedResult(result.answer);
     }
   } catch (err) {
     console.error("❌ Error in analyzeComment:", err);
-    alert("Failed to analyze comment.");
+  }
+  finally {
+    if (isSingle) {
+      span.textContent = "analyzed";
+    }
   }
 }
 
