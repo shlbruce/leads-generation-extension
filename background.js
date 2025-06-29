@@ -66,3 +66,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     startSequentialProcessing();
   }
 });
+
+// Keep a copy here for background.js only
+function shuffleArray(array) {
+  // Fisher-Yates shuffle (in-place)
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
+    [array[i], array[j]] = [array[j], array[i]];    // swap elements
+  }
+}
